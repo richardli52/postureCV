@@ -7,23 +7,41 @@ import os
 import math
 import time
 import subprocess
+import requests
+import webbrowser
+from packaging import version
+import sys
+import os
 
-# --- CONFIGURATION ---
+# CONFIGURATION
 CONFIG_PATH = os.path.expanduser("~/.posture_config.json")
 DEFAULT_THRESHOLD = 30 
 BLOCKLIST_APPS = ["zoom.us", "FaceTime", "Photo Booth", "Microsoft Teams", "Webex", "Skype"]
+CURRENT_VERSION = "1.0.1"
+REPO_URL = "https://api.github.com/repos/richardli52/postureCV/releases/latest"
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class PostureApp(rumps.App):
     def __init__(self):
         super(PostureApp, self).__init__("🧘")
         
-        # --- MENU STRUCTURE ---
+        # MENU STRUCTURE
         self.menu = [
             "Start Monitoring", 
             "Stop Monitoring", 
             None, 
             "Open Debug View", 
             "Calibrate", 
+            "Check for Updates", 
             None,
             {"Preferences": [
                 rumps.MenuItem("Auto-Pause for Zoom/Teams", callback=self.toggle_setting),
@@ -61,6 +79,40 @@ class PostureApp(rumps.App):
         self.current_angle = 0
         self.flash_state = False 
 
+    def check_for_updates(self):
+        try:
+            response = requests.get(REPO_URL)
+            latest_data = response.json()
+            latest_tag = latest_data['tag_name'] # e.g., "v1.1.0"
+            latest_version = latest_tag.lstrip('v')
+
+            if version.parse(latest_version) > version.parse(CURRENT_VERSION):
+                print(f"Update available: {latest_version}")
+                return True, latest_version
+            else:
+                print("App is up to date.")
+                return False, latest_version
+                
+        except Exception as e:
+            print(f"Update check failed: {e}")
+            return False, None
+    
+    def on_update_click(self, _):
+        update_available, new_ver = self.check_for_updates()
+        
+        if update_available:
+            response = rumps.alert(
+                title="Update Available!",
+                message=f"Version {new_ver} is out.\n\nRun 'brew upgrade posturecv' in Terminal to update.",
+                ok="Go to GitHub",
+                cancel="Later"
+            )
+            # If they click "Go to GitHub", open the page
+            if response == 1:
+                webbrowser.open("https://github.com/richardli52/postureCV/releases")
+        else:
+            rumps.alert("You are up to date!")
+
     def load_settings(self):
         default = {
             "interval": 60, 
@@ -81,7 +133,7 @@ class PostureApp(rumps.App):
         with open(CONFIG_PATH, 'w') as f:
             json.dump(self.config, f)
 
-    # --- BLOCKLIST CHECK ---
+    # BLOCKLIST CHECK
     def is_blocking_app_running(self):
         try:
             for app_name in BLOCKLIST_APPS:
@@ -92,7 +144,7 @@ class PostureApp(rumps.App):
             pass
         return None
 
-    # --- NOTIFICATIONS ---
+    # NOTIFICATIONS
     def send_notification(self, title, message):
         try:
             rumps.notification(title, "", message)
@@ -104,7 +156,7 @@ class PostureApp(rumps.App):
         except Exception:
             pass
 
-    # --- MATH & CV ---
+    # MATH & CV
     def calculate_neck_angle(self, landmarks_object):
         landmarks = landmarks_object.landmark 
         ear = landmarks[self.mp_pose.PoseLandmark.LEFT_EAR]
@@ -143,7 +195,7 @@ class PostureApp(rumps.App):
         results = self.pose.process(rgb)
         return results.pose_landmarks if results.pose_landmarks else None, valid_frame
 
-    # --- ACTIONS ---
+    # ACTIONS
     def toggle_setting(self, sender):
         sender.state = not sender.state 
         key_map = {
@@ -189,7 +241,7 @@ class PostureApp(rumps.App):
 
     @rumps.clicked("About")
     def about_page(self, _):
-        rumps.alert("PostureCV v1.0", "Created by Richard.\n\nKeep your spine healthy.")
+        rumps.alert("PostureCV v1.0", "Created by Richard Li.\n\nA posture alert a day keeps the chronic pain away.")
 
     @rumps.clicked("Open Debug View")
     def open_debug_view(self, _):
@@ -238,6 +290,10 @@ class PostureApp(rumps.App):
         
         cap.release()
         cv2.destroyAllWindows()
+    
+    @rumps.clicked("Check for Updates")
+    def update_menu(self, sender):
+        self.on_update_click(sender)
 
     @rumps.clicked("Calibrate")
     def calibrate(self, _):
@@ -280,7 +336,7 @@ class PostureApp(rumps.App):
             thresh = self.config.get("neck_threshold", DEFAULT_THRESHOLD)
             
             if self.current_angle > thresh:
-                # --- BAD POSTURE ---
+                # BAD POSTURE
                 
                 # A. Handle Flashing
                 if self.config.get("alert_flash", True):
@@ -297,7 +353,7 @@ class PostureApp(rumps.App):
                 if self.config.get("alert_sound", False):
                     os.system("afplay /System/Library/Sounds/Purr.aiff &")
             else:
-                # --- GOOD POSTURE ---
+                # GOOD POSTURE
                 if self.flash_timer.is_alive(): self.flash_timer.stop()
                 self.title = f"🧘 {self.current_angle:.0f}°"
         else:
