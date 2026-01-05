@@ -1,0 +1,5 @@
+rumps
+mediapipe
+opencv-python
+numpy
+py2app
