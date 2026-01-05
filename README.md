@@ -6,7 +6,7 @@ A free and open source tool to fix your posture for macOS  <div align="center">
 
 
 ## Created By
-Richard Li - https://github.com/richardli52
+[Richard Li](https://github.com/richardli52)
 
 ## What it is
 PostureCV is a minimalist menu bar utility that passively monitors your sitting posture using computer vision. 
@@ -20,9 +20,7 @@ PostureCV is a minimalist menu bar utility that passively monitors your sitting 
 Most posture correction software relies on continuous video feeds which can drain laptop batteries and consume significant CPU resources. Existing web apps can lead to privacy concerns. PostureCV operates differently by capturing one single frame at a specific custom interval, such as every 60 seconds. 
 
 ### The Mechanics
-Some posture software tracks the absolute pixel position of the face. This breaks down because it leads to false positives when you adjust your laptop screen or move your chair. 
-
-One other approach, taken by [Posture Pal](https://apps.apple.com/us/app/posture-pal-improve-alert/id1590316152), is tracking where the head is facing based on AirPods. However, this also leads to false positives when you look down, say to grab something, but are not necessarily having bad posture. 
+Some posture software tracks the absolute pixel position of the face. This breaks down because it leads to false positives when you adjust your laptop screen or move your chair. One other approach, taken by [Posture Pal](https://apps.apple.com/us/app/posture-pal-improve-alert/id1590316152), is tracking where the head is facing based on AirPods. However, this also leads to false positives when you look down, say to grab something, but are not necessarily having bad posture. 
 
 PostureCV uses angles instead of absolute pixel coordinates to determine slouching. It calculates the vector angle between your ear and your shoulder relative to a vertical axis. This makes the detection resilient to camera movement. You can adjust your webcam height or sit further back, and the angle of your neck remains consistent.
 
@@ -38,11 +36,9 @@ Learn more about Debug View in the Debugging and Calibration section below.
 PostureCV calculates the angle $\theta$, which is shown above, using the arctangent function
 $$\theta = \arctan\left(\frac{|x_{ear} - x_{shoulder}|}{|y_{ear} - y_{shoulder}|}\right) \times \frac{180}{\pi}$$
 
-If the calculated angle exceeds your threshold the system triggers an alert. See the Notifications and Alerts section below for the choice of how you would like to be alerted. 
+If the calculated angle exceeds your threshold, the system triggers an alert. See the Notifications and Alerts section below for the choice of how you would like to be alerted. 
 
-The main limitation to this approach is a false positive when the head leans to the side. 
-
-Sensitivity-related errors can be minimized via automatic and manual calibration, as seen in the Debugging and Calibration section below. 
+The main limitation to this approach is a false positive when the head leans to the side. Sensitivity-related errors can be minimized via automatic and manual calibration, as seen in the Debugging and Calibration section below. 
 
 Credit for these mechanics (and other aspects of the setup, including choice of libraries) goes to [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
 
@@ -98,7 +94,7 @@ Credit for these mechanics (and other aspects of the setup, including choice of 
 </table>
 
 ## Debugging and Calibration
-If you are unsure why you are receiving alerts you can click Open Debug View in the menu. This opens a temporary window showing your live camera feed with an overlay of ear and shoulder joint locations detected by computer vision. This allows you to visualize exactly what the computer sees and determine the best angle threshold that constitutes slouching.
+If you are unsure why you are receiving alerts, you can click Open Debug View in the menu. This opens a temporary window showing your live camera feed with an overlay of ear and shoulder joint locations detected by computer vision. This allows you to visualize exactly what the computer sees and determine the best angle threshold that constitutes slouching.
 <div align="center">
   <img src="assets/debug2.jpeg" alt = "Debug View 2, Slouching"> <br>
       <em>Debug View, Slouching</em>
@@ -106,7 +102,7 @@ If you are unsure why you are receiving alerts you can click Open Debug View in 
 <br>
 
 ## Auto Pause
-To prevent camera conflicts the application automatically pauses monitoring when it detects that specific video conferencing apps are running. This feature can be turned on or off in Preferences. 
+To prevent camera conflicts, the application automatically pauses monitoring when it detects that specific video conferencing apps are running. This feature can be turned on or off in Preferences. 
 * zoom.us
 * FaceTime
 * Photo Booth
@@ -117,7 +113,7 @@ To prevent camera conflicts the application automatically pauses monitoring when
 If you use Google Meet or Zoom inside a web browser like Chrome or Safari, the app cannot detect this automatically. You must pause monitoring manually using the menu bar if you'd like.
 
 ## Notifications and Alerts
-You can customize how the application alerts you when poor posture is detected.
+You can customize how the application alerts you when slouching is detected.
 * Sound plays a system alert sound
 * Flash Menu Bar changes the menu bar icon color to red
 * Notification sends a native macOS notification banner
