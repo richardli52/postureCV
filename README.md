@@ -1,5 +1,5 @@
 # PostureCV
-A free and open source tool to fix your posture for macOS. 
+A free, open-source tool to fix your posture for macOS. 
 
 By Richard Li - https://github.com/richardli52
 
@@ -28,7 +28,7 @@ Learn more about Debug View in the Debugging and Calibration section below.
 <br>
 <br>
 
-PostureCV calculates the angle $\theta$, which is shown above, using the arctangent function
+PostureCV calculates the angle $\theta$, shown below, using the arctangent function
 $$\theta = \arctan\left(\frac{|x_{ear} - x_{shoulder}|}{|y_{ear} - y_{shoulder}|}\right) \times \frac{180}{\pi}$$
 
 If the calculated angle exceeds your threshold, the system triggers an alert. See the Notifications and Alerts section below for the choice of how you would like to be alerted. 
@@ -52,7 +52,7 @@ This is the easiest method. If you already have Homebrew installed, skip to Step
    ```
    *(For more details, visit the official site: [brew.sh](https://brew.sh))*
 
-**2. Install PostureCV**. Once Homebrew is ready, paste and enter these two commands one by one in your Terminal:
+**2. Install PostureCV**. Once Homebrew is ready, paste and enter these two commands in your Terminal:
 
 ```bash
 brew tap richardli52/posturecv
@@ -88,7 +88,7 @@ If you prefer not to use Homebrew, you can download the app directly.
 ---
 
 ## Usage
-
+> [!WARNING]
 > **iPhone Users: Disable Continuity Camera**
 > If you have an iPhone signed into the same Apple ID, this app may default to using your iPhone camera instead of your webcam.
 >
@@ -132,7 +132,9 @@ If you prefer not to use Homebrew, you can download the app directly.
   </tr>
 </table>
 
-**Important**: The default threshold setting is intentionally conservative to minimize false positives. Most users will need to lower the threshold value to increase sensitivity. Use the Debug View (see below) to find the right threshold for your setup. Watch how the angle changes when you slouch versus when you sit with good posture, then adjust the threshold accordingly.
+> [!TIP]
+> **Adjusting Sensitivity**
+> The default threshold is conservative. Most users will need to lower the threshold value to increase sensitivity. Use the Debug View (see below) to find the right threshold for your setup. Watch how the angle changes when you slouch versus when you sit with good posture, then adjust the threshold accordingly.
 
 6. Click **Start Monitoring** to begin checking for slouching.
 <table align="center">
@@ -202,7 +204,7 @@ You can customize how the application alerts you when slouching is detected.
 Note that native notifications will not appear if you have any Focus Mode (such as Do Not Disturb or Personal) active.
 
 ## Privacy and Memory
-The application is designed privacy-first. It processes all camera data in RAM and discards the data immediately after the angle calculation is complete. The software never saves image files to your hard drive and never transmits video data to any external server or cloud service. It stands out from other offerings, including paid apps, for this reason. Privacy is why I built this project in the first place. 
+The application is designed privacy-first. It processes all camera data in RAM and discards the data immediately after the angle calculation is complete. The software never saves video or image files and never transmits data to any external server or cloud service. It stands out from other offerings, including paid apps, for this reason. Privacy is why I built this project in the first place. 
 
 ## Compatibility
 The vision model uses MediaPipe, which detects locations of facial features even if you are wearing glasses, headphones, or hats. The only features that matter here are the ears and shoulders. 
