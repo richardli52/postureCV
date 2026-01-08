@@ -73,23 +73,33 @@ If you prefer not to use Homebrew, you can download the app directly.
 3. **Fix Permissions:**
    Because this is an open-source app not signed with a paid Apple Developer ID, macOS may show an error saying the app is "Damaged" and should be moved to trash when you first click it.
 
-   <div align="middle">
-     <img src="assets/downloaderror.png" alt="Damaged Error Message" width="300"> <br>
-     <em>If you see this error, follow the step below.</em>
-   </div>
-   <br>
+  <table align="center">
+  <tr>
+    <td align="center">
+      <img src="assets/downloaderror.png" alt="Damaged Error Message" width="150">
+      <br>
+      <em>If you see this error, follow the step below.</em>
+    </td>
+    <td align="center">
+      <img src="assets/malwareerror.png" alt="Malware Warning Message" width="150">
+      <br>
+      <em>If you see this error, follow the step below.</em>
+    </td>
+  </tr>
+  </table>
 
-   To fix this, open your Terminal and paste this single command, then enter, to whitelist the app:
+
+   To fix this, open your Terminal and paste this single command, then enter, to whitelist the app (ensure you've moved PostureCV.app into Applications before proceeding):
    ```bash
    xattr -cr /Applications/PostureCV.app
    ```
-   You can now open the app normally!
+   You can now open the app normally. 
 
 ---
 
 ## Usage
 > [!WARNING]
-> **iPhone Users: Disable Continuity Camera**
+> **iPhone Users: Disable Continuity Camera**. 
 > If you have an iPhone signed into the same Apple ID, this app may default to using your iPhone camera instead of your webcam.
 >
 > **To fix this:**
