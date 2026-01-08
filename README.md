@@ -17,7 +17,7 @@ PostureCV is a minimalist menu bar app that passively monitors your sitting post
 
 Most posture correction software relies on continuous video feeds which can drain laptop batteries and consume significant CPU resources. Existing web apps can lead to privacy concerns. PostureCV operates differently by capturing one single frame at a specific custom interval, such as every 60 seconds. 
 
-### The Mechanics
+## The Mechanics
 Some posture software tracks the absolute pixel position of the face. This breaks down because it leads to false positives when you adjust your laptop screen or move your chair. Another approach, taken by [Posture Pal](https://apps.apple.com/us/app/posture-pal-improve-alert/id1590316152), is tracking where the head is facing based on AirPods.
 
 PostureCV uses angles instead of absolute pixel coordinates to determine slouching. It calculates the vector angle between your ear and your shoulder relative to a vertical axis. This makes the detection resilient to camera movement. You can adjust your webcam height or sit further back, and the angle of your neck remains consistent.
@@ -31,15 +31,22 @@ Learn more about Debug View in the [Manual Calibration](#manual-calibration) sec
 <br>
 <br>
 
-PostureCV calculates the angle $\theta$, shown below, using the arctangent function
-<br>
-$$\theta = \arctan\left(\frac{|x_{ear} - x_{shoulder}|}{|y_{ear} - y_{shoulder}|}\right) \times \frac{180}{\pi}$$
-<br>
-If the calculated angle exceeds your threshold, the system triggers an alert. See the [Notifications and Alerts](#notifications-and-alerts) section below for the choice of how you would like to be alerted. 
+PostureCV calculates the angle $\theta$, shown below, using the arctangent function:
 
-The main limitations to this approach are false positives when the head leans to the side or when you temporarily look downward (e.g., to grab something from your bag). Sensitivity-related errors can be minimized via automatic and manual calibration, as seen in the [Manual Calibration](#manual-calibration) section below.
+$$
+\theta = \arctan\left(\frac{|x_{ear} - x_{shoulder}|}{|y_{ear} - y_{shoulder}|}\right) \times \frac{180}{\pi}
+$$
 
-Credit for these mechanics (and other aspects of the setup, including choice of libraries) goes to [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
+If the calculated angle exceeds your threshold, the system triggers an alert. See the [Notifications and Alerts](#notifications-and-alerts) section below for alert options. 
+
+The main limitations to this approach are false positives when the head leans to the side or when you temporarily look downward (e.g., to grab something from your bag). Sensitivity-related errors can be minimized via automatic and manual calibration, as seen in the [Manual Calibration](#manual-calibration) section below. 
+
+Credit for these mechanics (and other aspects of the setup, including choice of some libraries) goes to [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
+
+### Optimal Setup
+The algorithm uses the vertical angle between your ear and shoulder. For best results:
+* **Keep the camera at eye level or above.** Low angles (looking up at your chin) make it hard to accurately detect the neck angle.
+* **Use a stable surface.** Avoid using the laptop on your lap because the moving camera angle will cause inconsistent readings.
 
 ## Installation
 
@@ -174,7 +181,7 @@ If you are unsure why you are receiving alerts, you can click Open Debug View in
 2. Slouch forward and observe how much the angle increases
 3. Set your threshold somewhere between these two values
 4. Test by slouching and checking if alerts trigger appropriately
-5. Press q to close Debug View
+5. Press `q` to close Debug View
 <br>
 <div align="center">
   <img src="assets/debug2.jpeg" alt = "Debug View 2, Slouching"> <br>
@@ -218,7 +225,7 @@ You can customize how the application alerts you when slouching is detected.
 Note that native notifications will not appear if you have any Focus Mode (such as Do Not Disturb or Personal) active.
 
 ## Privacy and Memory
-The application is designed privacy-first. It processes all camera data in RAM and discards the data immediately after the angle calculation is complete. The software never saves video or image files and never transmits data to any external server or cloud service. It stands out from other offerings, including paid apps, for this reason. Privacy is why I built this project in the first place. 
+The application is designed privacy-first. It processes all camera data in RAM and discards the data immediately after the angle calculation is complete. The software never saves video or image files and never transmits data to any external server or cloud service. It stands out from other offerings, including paid apps, for this reason. 
 
 ## Compatibility
 The vision model uses MediaPipe, which detects locations of facial features even if you are wearing glasses, headphones, or hats. The only features that matter here are the ears and shoulders. 
@@ -264,7 +271,7 @@ The application takes 10-20 seconds to open for the first time.
 Read the [Manual Calibration](#manual-calibration) section for more effective customization. 
 
 ## Credits
-Mechanics and choice of libraries adapted from [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
+Mechanics and choice of some libraries adapted from [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
 
 ## Logo
 
