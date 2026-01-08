@@ -3,6 +3,9 @@ A free, open-source tool to fix your posture for macOS.
 
 By Richard Li - https://github.com/richardli52
 
+> [!WARNING]
+> You must read the [Installation](#installation) section before attempting to use PostureCV. Directly downloading from Releases will not work immediately. 
+
 ## What it is
 PostureCV is a minimalist menu bar app that passively monitors your sitting posture using computer vision. 
 
@@ -15,7 +18,7 @@ PostureCV is a minimalist menu bar app that passively monitors your sitting post
 Most posture correction software relies on continuous video feeds which can drain laptop batteries and consume significant CPU resources. Existing web apps can lead to privacy concerns. PostureCV operates differently by capturing one single frame at a specific custom interval, such as every 60 seconds. 
 
 ### The Mechanics
-Some posture software tracks the absolute pixel position of the face. This breaks down because it leads to false positives when you adjust your laptop screen or move your chair. One other approach, taken by [Posture Pal](https://apps.apple.com/us/app/posture-pal-improve-alert/id1590316152), is tracking where the head is facing based on AirPods.
+Some posture software tracks the absolute pixel position of the face. This breaks down because it leads to false positives when you adjust your laptop screen or move your chair. Another approach, taken by [Posture Pal](https://apps.apple.com/us/app/posture-pal-improve-alert/id1590316152), is tracking where the head is facing based on AirPods.
 
 PostureCV uses angles instead of absolute pixel coordinates to determine slouching. It calculates the vector angle between your ear and your shoulder relative to a vertical axis. This makes the detection resilient to camera movement. You can adjust your webcam height or sit further back, and the angle of your neck remains consistent.
 
@@ -24,16 +27,17 @@ PostureCV uses angles instead of absolute pixel coordinates to determine slouchi
       <em>Demo of Mechanics</em>
 </div>
 <br>
-Learn more about Debug View in the Debugging and Calibration section below. 
+Learn more about Debug View in the [Manual Calibration](#manual-calibration) section below. 
 <br>
 <br>
 
 PostureCV calculates the angle $\theta$, shown below, using the arctangent function
+<br>
 $$\theta = \arctan\left(\frac{|x_{ear} - x_{shoulder}|}{|y_{ear} - y_{shoulder}|}\right) \times \frac{180}{\pi}$$
+<br>
+If the calculated angle exceeds your threshold, the system triggers an alert. See the [Notifications and Alerts](#notifications-and-alerts) section below for the choice of how you would like to be alerted. 
 
-If the calculated angle exceeds your threshold, the system triggers an alert. See the Notifications and Alerts section below for the choice of how you would like to be alerted. 
-
-The main limitations to this approach are false positives when the head leans to the side or when you temporarily look downward (e.g., to grab something from your bag). Sensitivity-related errors can be minimized via automatic and manual calibration, as seen in the Debugging and Calibration section below.
+The main limitations to this approach are false positives when the head leans to the side or when you temporarily look downward (e.g., to grab something from your bag). Sensitivity-related errors can be minimized via automatic and manual calibration, as seen in the [Manual Calibration](#manual-calibration) section below.
 
 Credit for these mechanics (and other aspects of the setup, including choice of libraries) goes to [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
 
@@ -61,7 +65,7 @@ brew install --cask posturecv
 Terminal may prompt you to enter your Mac password. 
 
 
-This will automatically download the app, move it to your Applications folder, and fix the "unidentified developer" permissions for you. Skip to the Usage section once this is complete. 
+This will automatically download the app, move it to your Applications folder, and fix the "unidentified developer" permissions for you. Skip to the [Usage](#usage) section once this is complete. 
 
 ---
 
@@ -100,14 +104,13 @@ If you prefer not to use Homebrew, you can download the app directly.
 ## Usage
 > [!WARNING]
 > **iPhone Users: Disable Continuity Camera**. 
-> If you have an iPhone signed into the same Apple ID, this app may default to using your iPhone camera instead of your webcam.
+> If you have an iPhone on the same Apple ID, this app will default to using your iPhone camera instead of your webcam.
 >
 > **To fix this:**
-> On your iPhone, go to **Settings > General > AirPlay & Handoff**, scroll to the bottom, and toggle **Continuity Camera** to **OFF**.
+> On your iPhone, go to **Settings > General > AirPlay & Handoff**, scroll to the bottom, and toggle **Continuity Camera** **OFF**.
 >
-> *If you skip this step, the app may silently connect to your phone's camera in the background.*
 1. Open **PostureCV** from your Applications folder.
-2. Grant **Camera Permissions** when macOS prompts you.
+2. Grant camera permissions when macOS prompts you.
 3. Look for the praying emoji (🧘) in your macOS menu bar near the clock.
 <div align="middle">
   <img src="assets/dropdown.png" alt="Dropdown Menu" width="100"> <br>
@@ -115,7 +118,7 @@ If you prefer not to use Homebrew, you can download the app directly.
 </div>
 <br>
 
-4. Sit up straight in your ideal posture and click **Calibrate** in the menu dropdown to automatically set your baseline.
+4. Sit up straight in your ideal posture and click **Calibrate** in the menu dropdown to automatically set your baseline. See the [Manual Calibration](#manual-calibration) section for more accurate customization. 
 <div align="middle">
   <img src="assets/calibration.png" alt="Calibration" width="100"> <br><em>Calibration Confirmation</em><br>
 </div>
@@ -143,8 +146,8 @@ If you prefer not to use Homebrew, you can download the app directly.
 </table>
 
 > [!TIP]
-> **Adjusting Sensitivity**
-> The default threshold is conservative. Most users will need to lower the threshold value to increase sensitivity. Use the Debug View (see below) to find the right threshold for your setup. Watch how the angle changes when you slouch versus when you sit with good posture, then adjust the threshold accordingly.
+> **Adjusting Sensitivity.**
+> The default threshold is conservative. Most users will need to lower the threshold value to increase sensitivity. Use the Debug View (see below) to find the right threshold for your setup. 
 
 6. Click **Start Monitoring** to begin checking for slouching.
 <table align="center">
@@ -163,24 +166,23 @@ If you prefer not to use Homebrew, you can download the app directly.
 </table>
 
 
-## Debugging and Calibration
-If you are unsure why you are receiving alerts, you can click Open Debug View in the menu. This opens a temporary window showing your live camera feed with an overlay of ear and shoulder joint locations detected by computer vision. This allows you to visualize exactly what the computer sees and determine the best angle threshold that constitutes slouching.
+## Manual Calibration
+If you are unsure why you are receiving alerts, you can click Open Debug View in the menu. This opens a live camera feed with an overlay of ear and shoulder joint locations detected by computer vision. This allows you to determine the best angle threshold that constitutes slouching.
 
-**To find your optimal threshold:**
+**To find your optimal threshold in Debug View:**
 1. Open Debug View while sitting with good posture and note the angle displayed
 2. Slouch forward and observe how much the angle increases
 3. Set your threshold somewhere between these two values
 4. Test by slouching and checking if alerts trigger appropriately
-<br>
+5. Press q to close Debug View
 <br>
 <div align="center">
   <img src="assets/debug2.jpeg" alt = "Debug View 2, Slouching"> <br>
       <em>Debug View, Slouching</em>
 </div>
-<br>
 
 ## Auto Pause
-To prevent camera conflicts, the application automatically pauses monitoring when it detects that specific video conferencing apps are running. This feature can be turned on or off in Preferences. 
+To prevent confusion, the application automatically pauses monitoring when it detects that specific video conferencing apps are running. It automatically resumes when the video conferencing app closes. These apps include:
 * zoom.us
 * FaceTime
 * Photo Booth
@@ -188,12 +190,14 @@ To prevent camera conflicts, the application automatically pauses monitoring whe
 * Webex
 * Skype
 
+This feature can be turned on or off in Preferences. 
+
 If you use Google Meet or Zoom inside a web browser like Chrome or Safari, the app cannot detect this automatically. You must pause monitoring manually using the menu bar if you'd like.
 
 ## Notifications and Alerts
 You can customize how the application alerts you when slouching is detected.
 * Sound plays a system alert sound
-* Flash Menu Bar changes the menu bar icon color to red
+* Flash Menu Bar makes the menu bar alternate with a warning sign emoji
 * Notification sends a native macOS notification banner
 <table align="center">
   <tr>
@@ -226,6 +230,38 @@ If you prefer to run the Python script directly or modify the code:
 1. Clone this repository
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run the app: `python3 posture_app.py`
+
+## Debugging
+
+### App cannot be opened. 
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="assets/downloaderror.png" alt="Damaged Error Message" width="150">
+      <br>
+      <em>If you see this error, follow the step below.</em>
+    </td>
+    <td align="center">
+      <img src="assets/malwareerror.png" alt="Malware Warning Message" width="150">
+      <br>
+      <em>If you see this error, follow the step below.</em>
+    </td>
+  </tr>
+  </table>
+
+You might not have installed the application properly. See the [Installation](#installation) section to resolve this. 
+
+### Camera not detected or opening on iPhone instead of webcam. 
+Read the start of the [Usage](#usage) section for a solution. 
+
+### No response when opening app. 
+
+The application takes 10-20 seconds to open for the first time. 
+
+### The app is not detecting my slouching. 
+
+Read the [Manual Calibration](#manual-calibration) section for more effective customization. 
 
 ## Credits
 Mechanics and choice of libraries adapted from [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
