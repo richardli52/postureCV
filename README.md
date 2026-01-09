@@ -274,11 +274,6 @@ The application takes 10-20 seconds to open for the first time.
 Read the [Manual Calibration](#manual-calibration) section for more effective customization. 
 
 ## Acknowledgements
+Big thanks to Dan Chen and Robert Chong for early testing 🙏
+
 Mechanics and choice of some libraries adapted from [Tiff In Tech](https://github.com/TiffinTech/posture-corrector). 
-
-## Logo
-
-<div align="left">
-  <img src="assets/Logo.png" alt = "Logo" width="100"> <br>
-      <em>PostureCV Logo</em>
-</div>
