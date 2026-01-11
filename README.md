@@ -27,11 +27,13 @@ This successfully detects slouching because when you lean forward toward the web
 Necessary conditions are outlined in the [Optimal Setup](#optimal-setup) section. 
 
 <div align="center">
-  <img src="assets/debug1.jpeg" alt = "Debug View 1"> <br>
-      <em>Demo of mechanics in the Debug View window</em>
-    <br>
-        <br>
-
+  <a href="https://www.loom.com/share/ad94ad19a78847f580994e2c59c3c16c" target="_blank">
+    <img src="assets/loom.png" alt="Click to watch the Loom video demo">
+  </a>
+  <br>
+  <em>Click to watch a Loom video demo</em>
+  <br>
+  <br>
 </div>
 
 Learn more about Debug View in the [Manual Calibration](#manual-calibration) section below. 
